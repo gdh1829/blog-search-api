@@ -1,0 +1,17 @@
+kakao:
+  auth:
+    prefix: "KakaoAK"
+    accessToken: "ENC(xPI7P3eB/jn9aY6272Geq+XtnJnYrZE46FkA4bhoZazn9MAC9wYWf3nMGNtmn29goGtvsSAZNv+WSL4wTFsRaKCs+HQ9IffTf9Un3qzl53c=)"
+  api:
+    host: "https://dapi.kakao.com"
+
+naver:
+  auth:
+    clientId: "VIKgsNdpEwXVehMBzWON"
+    clientSecret: "ENC(enAIUmcyGxA3sfGyMhzJZt5RSvj+fHVR0wN8DgpSv/hp7QMM3oZQ+qey23X4BsFp)"
+  api:
+    host: "https://openapi.naver.com"
+
+jasypt:
+  encryptor:
+    bean: stringEncryptor
