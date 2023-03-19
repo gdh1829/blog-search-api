@@ -1,6 +1,6 @@
 spring:
   datasource:
-#    url: jdbc:h2:file:~/data/demo
+#    url: jdbc:h2:file:./database/testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
     hikari:
       maximumPoolSize: 100
@@ -15,18 +15,23 @@ spring:
       enabled: true
       path: /h2
   jpa:
+    generate-ddl: false
+    defer-datasource-initialization: true
     database-platform: org.hibernate.dialect.H2Dialect
     # OSIV
     open-in-view: false
-    hibernate:
-      ddl-auto: update
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#    hibernate:
+#      ddl-auto: create
+#      naming:
+#        physical-strategy: "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         generate_statistics: true
+  sql:
+    init:
+      mode: embedded
 
 kakao:
   auth:
