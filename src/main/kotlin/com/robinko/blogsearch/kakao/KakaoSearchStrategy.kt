@@ -3,6 +3,8 @@ package com.robinko.blogsearch.kakao
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand
+import com.robinko.blogsearch.BlogSearchPriority
+import com.robinko.blogsearch.BlogSearchPriorityRepository
 import com.robinko.blogsearch.ExternalApiService
 import com.robinko.blogsearch.ExternalSearchResult
 import com.robinko.blogsearch.SearchBlogStrategy
@@ -20,19 +22,23 @@ class KakaoSearchStrategy(
     @Value("\${kakao.auth.accessToken}")
     private val accessKey: String,
     @Value("\${kakao.api.host}")
-    private val host: String
+    private val host: String,
+    private val blogSearchPriorityRepository: BlogSearchPriorityRepository
 ): ExternalApiService(), SearchBlogStrategy {
+    final override val sourceBlog = SourceBlog.KAKAO
+
     private val log = LoggerFactory.getLogger(KakaoSearchStrategy::class.java)
 
     private val supportedSorts = mapOf("score" to "accuracy", "latest" to "recency")
-    private lateinit var authCredentials: Set<String>
 
-    @PostConstruct
-    fun initAuthHeader() {
-        authCredentials = setOf("Authorization" ,"$accessKeyPrefix $accessKey")
+    private var blogSearchPriority: BlogSearchPriority? = null
+
+    private val authCredentials = setOf("Authorization" ,"$accessKeyPrefix $accessKey")
+
+    override fun getBlogSearchPriority(): BlogSearchPriority? = blogSearchPriority
+    override fun setBlogSearchPriority() {
+        blogSearchPriority = blogSearchPriorityRepository.findBySource(sourceBlog)
     }
-
-    override fun getSourceBlog(): SourceBlog = SourceBlog.KAKAO
 
     @HystrixCommand(commandKey = "searchkakaoBlog", fallbackMethod = "searchkakaoBlogFallback")
     override fun searchBlog(

@@ -1,8 +1,11 @@
 package com.robinko.blogsearch
 
 interface SearchBlogStrategy {
+    val sourceBlog: SourceBlog
 
-    fun getSourceBlog(): SourceBlog
+    fun getBlogSearchPriority(): BlogSearchPriority?
+
+    fun setBlogSearchPriority()
 
     fun searchBlog(
         query: String,

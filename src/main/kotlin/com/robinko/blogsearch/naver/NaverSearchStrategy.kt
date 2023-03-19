@@ -3,6 +3,8 @@ package com.robinko.blogsearch.naver
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand
+import com.robinko.blogsearch.BlogSearchPriority
+import com.robinko.blogsearch.BlogSearchPriorityRepository
 import com.robinko.blogsearch.ExternalApiService
 import com.robinko.blogsearch.ExternalSearchResult
 import com.robinko.blogsearch.SearchBlogStrategy
@@ -20,20 +22,25 @@ class NaverSearchStrategy(
     @Value("\${naver.auth.clientSecret}")
     private val clientSecret: String,
     @Value("\${naver.api.host}")
-    private val host: String
+    private val host: String,
+    private val blogSearchPriorityRepository: BlogSearchPriorityRepository
 ): ExternalApiService(), SearchBlogStrategy {
     private val log = LoggerFactory.getLogger(NaverSearchStrategy::class.java)
 
+    final override val sourceBlog = SourceBlog.NAVER
+
     private val supportedSorts = mapOf("score" to "sim", "latest" to "date")
 
-    private lateinit var authCredentials: Set<String>
+    private var blogSearchPriority: BlogSearchPriority? = null
 
-    @PostConstruct
-    fun initCredentials() {
-        authCredentials = setOf("X-Naver-Client-Id", clientId, "X-Naver-Client-Secret", clientSecret)
+    private val authCredentials =
+        setOf("X-Naver-Client-Id", clientId, "X-Naver-Client-Secret", clientSecret)
+
+    override fun getBlogSearchPriority(): BlogSearchPriority? = blogSearchPriority
+
+    override fun setBlogSearchPriority() {
+        blogSearchPriority = blogSearchPriorityRepository.findBySource(sourceBlog)
     }
-
-    override fun getSourceBlog(): SourceBlog = SourceBlog.NAVER
 
     @HystrixCommand(commandKey = "searchNaverBlog", fallbackMethod = "searchNaverBlogFallback")
     override fun searchBlog(
