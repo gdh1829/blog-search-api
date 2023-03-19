@@ -16,7 +16,7 @@ class BlogSearchController(
     private val blogService: BlogService
 ) {
     @GetMapping("/blogs")
-    fun searchKakaoBlog(
+    fun searchBlog(
         @RequestParam query: String,
         @PageableDefault(page = 1, size = 20, sort = ["score"], direction = Sort.Direction.DESC)
         pageable: Pageable

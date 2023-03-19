@@ -17,7 +17,7 @@ class KakaoSearchService(
     @Value("\${kakao.auth.accessToken}")
     private val accessKey: String,
     @Value("\${kakao.api.host}")
-    private val host: String,
+    private val host: String
 ): ExternalApiService() {
     private val log = LoggerFactory.getLogger(KakaoSearchService::class.java)
 

@@ -2,6 +2,7 @@ package com.robinko.blogsearch
 
 import com.robinko.blogsearch.kakao.KakaoSearchService
 import com.robinko.blogsearch.naver.NaverSearchService
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -9,7 +10,8 @@ import org.springframework.stereotype.Service
 @Service
 class BlogService(
     private val kakaoSearchService: KakaoSearchService,
-    private val naverSearchService: NaverSearchService
+    private val naverSearchService: NaverSearchService,
+    private val eventPublisher: ApplicationEventPublisher
 ) {
     fun searchBlog(
         query: String,
@@ -22,5 +24,6 @@ class BlogService(
                 query, pageable.pageNumber, pageable.pageSize, pageable.sort.firstOrNull()?.property
             )
             )?.toPage(pageable)
+            ?.also { eventPublisher.publishEvent(BlogSearchEvent(query)) }
     }
 }
