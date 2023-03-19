@@ -26,6 +26,8 @@ abstract class ExternalApiService {
         .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
         .registerModules(JavaTimeModule(), Jdk8Module())
 
+    abstract fun <T> getExternalResources(resourcePath: String, type: TypeReference<T>): T?
+
     internal fun <T> getResult(type: TypeReference<T>, response: HttpResponse<String>): T? =
         response.takeIf { it.statusCode() == HttpStatus.OK.value() }
             ?.body()
@@ -51,7 +53,7 @@ abstract class ExternalApiService {
 
         val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
         if (response.statusCode() != HttpStatus.OK.value()) {
-            log.error("Api Connection Error -> host $host path $apiPath response $response")
+            log.error("Api Connection Error -> $response ${response.body()}")
         }
 
         return response

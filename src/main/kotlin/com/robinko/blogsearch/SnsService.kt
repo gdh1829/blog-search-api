@@ -19,13 +19,15 @@ import javax.annotation.PreDestroy
 class SnsService(
     @Value("\${localstack.endpoint:}")
     private val endpoint: String,
+    @Value("\${localstack.region:}")
+    private val region: String,
     @Value("\${localstack.sns.topicPrefix:}")
     private val snsTopicPrefix: String
 ) {
     private val log = LoggerFactory.getLogger(SnsService::class.java)
 
     private val snsClient = AmazonSNSClientBuilder.standard()
-        .withEndpointConfiguration(EndpointConfiguration(endpoint, Regions.AP_NORTHEAST_2.name))
+        .withEndpointConfiguration(EndpointConfiguration(endpoint, region))
         .build()
 
     private val om = jacksonObjectMapper()

@@ -24,6 +24,8 @@ import javax.annotation.PreDestroy
 class SqsService(
     @Value("\${localstack.endpoint}")
     private val endpoint: String,
+    @Value("\${localstack.region:}")
+    private val region: String,
     @Value("\${localstack.sqs.queueUrl}")
     private val queueUrl: String,
     private val keywordStatisticsService: KeywordStatisticsService
@@ -32,7 +34,7 @@ class SqsService(
     private val log = LoggerFactory.getLogger(SqsService::class.java)
 
     private val sqs = AmazonSQSAsyncClientBuilder.standard()
-        .withEndpointConfiguration(EndpointConfiguration(endpoint, Regions.AP_NORTHEAST_2.name))
+        .withEndpointConfiguration(EndpointConfiguration(endpoint, region))
         .build()
 
     private val om: ObjectMapper = jacksonObjectMapper()

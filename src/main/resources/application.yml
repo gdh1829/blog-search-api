@@ -48,6 +48,7 @@ jasypt:
 
 localstack:
   endpoint: "http://localhost:4566"
+  region: "ap-northeast-2"
   sns:
     topicPrefix: "arn:aws:sns:ap-northeast-2:000000000000:"
   sqs:
