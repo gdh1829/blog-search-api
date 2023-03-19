@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
+@Transactional
 @Service
 class KeywordStatisticsService(
     private val keywordStatisticsRepository: KeywordStatisticsRepository
@@ -25,7 +26,15 @@ class KeywordStatisticsService(
             ).also { log.debug("KeywordStatistics newly saved: $it") }
     }
 
+    fun deleteKeywordStatistics(keyword: String) =
+        keywordStatisticsRepository.findByIdOrNull(keyword)
+            ?.also {
+                keywordStatisticsRepository.delete(it)
+                log.info("KeywordStatistics deleted: $it")
+            }
+
     @Transactional(readOnly = true)
     @Cacheable(value = ["Top10Keywords"])
-    fun findTop10Keywords(): List<KeywordStatistics> = keywordStatisticsRepository.findTop10ByOrderBySearchCountDesc()
+    fun findTop10Keywords(): List<KeywordStatistics> =
+        keywordStatisticsRepository.findTop10ByOrderBySearchCountDescUpdatedTimeDesc()
 }

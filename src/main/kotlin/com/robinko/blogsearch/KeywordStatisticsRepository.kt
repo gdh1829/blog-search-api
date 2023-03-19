@@ -20,5 +20,5 @@ interface KeywordStatisticsRepository: JpaRepository<KeywordStatistics, String> 
     fun updateSearchCount(@Param("keyword") keyword: String): Int
 
     @CachePut(value = ["Top10Keywords"])
-    fun findTop10ByOrderBySearchCountDesc(): List<KeywordStatistics>
+    fun findTop10ByOrderBySearchCountDescUpdatedTimeDesc(): List<KeywordStatistics>
 }

@@ -9,11 +9,9 @@ import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
-import javax.persistence.Table
 
 @Where(clause = "deletedTime is null")
 @SQLDelete(sql = "UPDATE KeywordStatistics SET deletedTime = now() WHERE keyword = ?")
-@Table(name = "KeywordStatistics")
 @Entity
 data class KeywordStatistics(
     @Id

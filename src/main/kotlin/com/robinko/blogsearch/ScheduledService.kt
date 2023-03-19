@@ -19,6 +19,6 @@ class ScheduledService(
     @Scheduled(cron = " * */5 * * * *", zone = "Asia/Seoul")
     @SchedulerLock(name = "refreshCacheTop10Keywords", lockAtMostFor = "PT10M")
     fun refreshCacheTop10Keywords() {
-        keywordStatisticsRepository.findTop10ByOrderBySearchCountDesc()
+        keywordStatisticsRepository.findTop10ByOrderBySearchCountDescUpdatedTimeDesc()
     }
 }
