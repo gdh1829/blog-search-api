@@ -1,3 +1,33 @@
+spring:
+  datasource:
+#    url: jdbc:h2:file:~/data/demo
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
+    hikari:
+      maximumPoolSize: 100
+      minimumIdle: 10
+      idleTimeout: 60_000
+      maxLifetime: 60_000
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    # OSIV
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        generate_statistics: true
+
 kakao:
   auth:
     prefix: "KakaoAK"
@@ -15,3 +45,10 @@ naver:
 jasypt:
   encryptor:
     bean: stringEncryptor
+
+localstack:
+  endpoint: "http://localhost:4566"
+  sns:
+    topicPrefix: "arn:aws:sns:ap-northeast-2:000000000000:"
+  sqs:
+    queueUrl: "http://localhost:4566/000000000000/blog-search-api"
