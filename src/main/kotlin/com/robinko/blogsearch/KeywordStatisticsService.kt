@@ -21,9 +21,8 @@ class KeywordStatisticsService(
                 keywordStatisticsRepository.updateSearchCount(keyword)
                     .also { log.debug("KeywordStatistics search count updated: $it") }
             }
-            ?: keywordStatisticsRepository.save(
-                KeywordStatistics(keyword = keyword, searchCount = 1)
-            ).also { log.debug("KeywordStatistics newly saved: $it") }
+            ?: keywordStatisticsRepository.save(KeywordStatistics(keyword = keyword, searchCount = 1))
+                .also { log.debug("KeywordStatistics newly saved: $it") }
     }
 
     fun deleteKeywordStatistics(keyword: String) =
