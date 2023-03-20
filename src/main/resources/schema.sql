@@ -8,7 +8,7 @@
 --    `priority` int(2) NOT NULL,
 --    PRIMARY KEY(`serverId`)
 -- );
-CREATE INDEX `BlogSearchPriority_source_idx` ON `BLOGSEARCHPRIORITY` (`source`);
+CREATE INDEX `BlogSearchPriority_source_idx` ON `BlogSearchPriority` (`source`);
 
 -- create table KeywordStatistics(
 --    `keyword` varchar(255) NOT NULL,
@@ -19,7 +19,7 @@ CREATE INDEX `BlogSearchPriority_source_idx` ON `BLOGSEARCHPRIORITY` (`source`);
 --    PRIMARY KEY(`keyword`)
 -- );
 
-CREATE INDEX `KeywordStatistics_searchCount_idx` ON `KEYWORDSTATISTICS` (`searchCount`, `updatedTime`);
+CREATE INDEX `KeywordStatistics_searchCount_idx` ON `keywordStatistics` (`searchCount`, `updatedTime`);
 
 -- create TABLE shedlock(
 --  name VARCHAR(64) NOT NULL,

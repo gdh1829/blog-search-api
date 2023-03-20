@@ -1,4 +1,4 @@
-package com.robinko.blogsearch.config
+package com.robinko.blogsearch
 
 import org.jasypt.encryption.StringEncryptor
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor

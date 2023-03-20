@@ -20,10 +20,10 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     # OSIV
     open-in-view: false
-#    hibernate:
-#      ddl-auto: create
-#      naming:
-#        physical-strategy: "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"
+    hibernate:
+      ddl-auto: create
+      naming:
+        physical-strategy: "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"
     properties:
       hibernate:
         show_sql: true

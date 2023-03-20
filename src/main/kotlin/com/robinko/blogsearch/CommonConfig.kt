@@ -1,4 +1,4 @@
-package com.robinko.blogsearch.config
+package com.robinko.blogsearch
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties
 import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider
@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.task.TaskSchedulerCustomizer
+import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -22,16 +23,17 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import javax.sql.DataSource
 
+@EnableCaching
 @EnableTransactionManagement
 @EnableRetry
 @EnableAsync
-@EnableJpaRepositories(basePackages = ["com.robinko.blogsearch"])
-@EnableSchedulerLock(defaultLockAtLeastFor = "PT30S", defaultLockAtMostFor = "PT60S")
+// @EnableJpaRepositories(basePackages = ["com.robinko.blogsearch"])
 @EnableScheduling
 @EnableEncryptableProperties
 @ComponentScan(basePackageClasses = [CommonConfig::class])
-@Import(PropertyEncryptConfig::class)
-@Configuration
+@Import(
+    PropertyEncryptConfig::class
+)
 class CommonConfig : AsyncConfigurer, TaskSchedulerCustomizer {
 
     private val log = LoggerFactory.getLogger(CommonConfig::class.java)
@@ -39,15 +41,6 @@ class CommonConfig : AsyncConfigurer, TaskSchedulerCustomizer {
     @Configuration
     @PropertySource("classpath:application.yml", factory = YamlPropertyLoadFactory::class)
     class DefaultConfig
-
-    @Bean
-    @Autowired
-    fun lockProvider(dataSource: DataSource): JdbcTemplateLockProvider =
-        JdbcTemplateLockProvider.Configuration.builder()
-            .withJdbcTemplate(JdbcTemplate(dataSource))
-            .usingDbTime()
-            .build()
-            .let { JdbcTemplateLockProvider(it) }
 
     override fun getAsyncUncaughtExceptionHandler(): AsyncUncaughtExceptionHandler? {
         return AsyncUncaughtExceptionHandler { ex, method, params ->
