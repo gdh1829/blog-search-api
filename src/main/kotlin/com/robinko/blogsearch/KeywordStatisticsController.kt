@@ -11,10 +11,10 @@ class KeywordStatisticsController(
     private val keywordStatisticsService: KeywordStatisticsService,
 ) {
 
-    @GetMapping("/KeywordStatistics", params = ["top10=true"])
+    @GetMapping("/keywordStatistics", params = ["top10=true"])
     fun getTop10Keywords(): List<KeywordStatistics> = keywordStatisticsService.findTop10Keywords()
 
-    @DeleteMapping("/admin/KeywordStatistics/{keyword}")
+    @DeleteMapping("/admin/keywordStatistics/{keyword}")
     fun deleteKeywordStatistics(
         @PathVariable keyword: String
     ): ResponseEntity<KeywordStatistics?> =

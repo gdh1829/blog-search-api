@@ -9,7 +9,7 @@ class BlogSearchPriorityController(
     private val blogSearchService: BlogSearchService
 ) {
 
-    @PutMapping("/blogSearchPriority", params = ["apply=refresh"])
+    @PutMapping("/blogSearchPriority", params = ["refresh=true"])
     fun applyBlogSearchPriority(): ResponseEntity<String> {
         blogSearchService.refreshSearchBlogStrategyPriorities()
         return ResponseEntity.ok("ok")
