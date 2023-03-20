@@ -1,6 +1,5 @@
 package com.robinko.blogsearch
 
-import org.springframework.cache.annotation.CachePut
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -19,6 +18,5 @@ interface KeywordStatisticsRepository: JpaRepository<KeywordStatistics, String> 
     )
     fun updateSearchCount(@Param("keyword") keyword: String): Int
 
-    @CachePut(value = ["Top10Keywords"])
     fun findTop10ByOrderBySearchCountDescUpdatedTimeDesc(): List<KeywordStatistics>
 }
