@@ -4,6 +4,10 @@
 - awscli
 ```shell
 brew install awscli
+
+# 애플리케이션을 기동하는 환경에 awscli를 처음사용하는 환경이라면 아래의 커맨드를 통해 awscli profile 생성 필요.
+# !!반드시 region은 ap-northeast-2로 설정!!
+aws configure
 ```
 - localstack의 sns, sqs 서비스를 사용하므로 기동전 다음의 인프라 셋팅이 필요.
 ```shell
