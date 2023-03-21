@@ -33,7 +33,7 @@ class KeywordStatisticsService(
             }
 
     @Transactional(readOnly = true)
-    @Cacheable("Top10Keywords")
+    @Cacheable(value = ["Top10Keywords"])
     fun findTop10Keywords(): List<KeywordStatistics> =
         keywordStatisticsRepository.findTop10ByOrderBySearchCountDescUpdatedTimeDesc()
 }

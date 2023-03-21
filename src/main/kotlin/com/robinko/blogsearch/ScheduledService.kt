@@ -17,7 +17,7 @@ class ScheduledService(
      * 5분 단위로 상위 10 인기 키워드 캐시를 갱신.
      */
     @Transactional(readOnly = true)
-    @CachePut("Top10Keywords")
+    @CachePut(value = ["Top10Keywords"])
     @Scheduled(cron = " * */5 * * * *", zone = "Asia/Seoul")
     @SchedulerLock(name = "refreshCacheTop10Keywords", lockAtMostFor = "PT10M")
     fun refreshCacheTop10Keywords() {
