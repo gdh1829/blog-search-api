@@ -5,14 +5,15 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand
 import com.robinko.blogsearch.BlogSearchPriority
 import com.robinko.blogsearch.BlogSearchPriorityRepository
+import com.robinko.blogsearch.BlogSource
 import com.robinko.blogsearch.ExternalApiService
 import com.robinko.blogsearch.ExternalSearchResult
 import com.robinko.blogsearch.SearchBlogStrategy
-import com.robinko.blogsearch.BlogSource
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.net.URLEncoder
+import java.net.http.HttpClient
 
 @Component
 class NaverSearchStrategy(
@@ -22,8 +23,9 @@ class NaverSearchStrategy(
     private val clientSecret: String,
     @Value("\${naver.api.host}")
     private val host: String,
-    private val blogSearchPriorityRepository: BlogSearchPriorityRepository
-): ExternalApiService(), SearchBlogStrategy {
+    private val blogSearchPriorityRepository: BlogSearchPriorityRepository,
+    httpClient: HttpClient,
+): ExternalApiService(httpClient), SearchBlogStrategy {
     private val log = LoggerFactory.getLogger(NaverSearchStrategy::class.java)
 
     final override val blogSource = BlogSource.NAVER

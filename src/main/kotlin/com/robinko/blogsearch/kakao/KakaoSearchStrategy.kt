@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.net.URLEncoder
+import java.net.http.HttpClient
 
 @Component
 class KakaoSearchStrategy(
@@ -22,8 +23,9 @@ class KakaoSearchStrategy(
     private val accessKey: String,
     @Value("\${kakao.api.host}")
     private val host: String,
-    private val blogSearchPriorityRepository: BlogSearchPriorityRepository
-): ExternalApiService(), SearchBlogStrategy {
+    private val blogSearchPriorityRepository: BlogSearchPriorityRepository,
+    httpClient: HttpClient
+): ExternalApiService(httpClient), SearchBlogStrategy {
     final override val blogSource = BlogSource.KAKAO
 
     private val log = LoggerFactory.getLogger(KakaoSearchStrategy::class.java)
