@@ -31,7 +31,7 @@ class NaverSearchStrategy(
 ): ExternalApiService(httpClient), SearchBlogStrategy {
     private val log = LoggerFactory.getLogger(NaverSearchStrategy::class.java)
 
-    final override val blogSource = BlogSource.NAVER
+    private val blogSource = BlogSource.NAVER
 
     private val supportedSorts = mapOf("score" to "sim", "latest" to "date")
 
@@ -45,6 +45,8 @@ class NaverSearchStrategy(
     override fun setBlogSearchPriority() {
         blogSearchPriority = blogSearchPriorityRepository.findBySource(blogSource)
     }
+
+    override fun getBlogSource(): BlogSource = blogSource
 
     @HystrixCommand(commandKey = "searchNaverBlog", fallbackMethod = "searchNaverBlogFallback")
     override fun searchBlog(

@@ -2,7 +2,7 @@ package com.robinko.blogsearch
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.mockito.BDDMockito.willDoNothing
+import org.mockito.BDDMockito.given
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,7 +26,8 @@ class BlogSearchPriorityControllerTest {
     @Test
     fun `applyBlogSearchPriority success`() {
         // arrange
-        willDoNothing().given(blogSearchService).refreshSearchBlogStrategyPriorities()
+        given(blogSearchService.refreshSearchBlogStrategyPriorities())
+            .willReturn(listOf(BlogSource.KAKAO, BlogSource.NAVER))
 
         // action
         mockMvc.perform(
@@ -39,7 +40,7 @@ class BlogSearchPriorityControllerTest {
             .andExpect(
                 MockMvcResultMatchers.handler().methodName(BlogSearchPriorityController::applyBlogSearchPriority.name)
             )
-            .andExpect(MockMvcResultMatchers.content().string("ok"))
+            .andExpect(MockMvcResultMatchers.content().string("[\"KAKAO\",\"NAVER\"]"))
 
         // verify
         assertAll(

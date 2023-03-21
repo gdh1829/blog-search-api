@@ -13,8 +13,8 @@ class BlogSearchPriorityController(
      * 외부 연동 블로그 검색 소스 우선순위 리프레쉬 API.
      */
     @PutMapping("/blogSearchPriority", params = ["refresh=true"])
-    fun applyBlogSearchPriority(): ResponseEntity<String> {
-        blogSearchService.refreshSearchBlogStrategyPriorities()
-        return ResponseEntity.ok("ok")
+    fun applyBlogSearchPriority(): ResponseEntity<List<BlogSource>> {
+        return blogSearchService.refreshSearchBlogStrategyPriorities()
+            .let { ResponseEntity.ok(it) }
     }
 }

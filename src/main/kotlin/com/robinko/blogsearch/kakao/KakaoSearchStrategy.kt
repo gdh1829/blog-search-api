@@ -29,9 +29,9 @@ class KakaoSearchStrategy(
     private val blogSearchPriorityRepository: BlogSearchPriorityRepository,
     httpClient: HttpClient
 ): ExternalApiService(httpClient), SearchBlogStrategy {
-    final override val blogSource = BlogSource.KAKAO
-
     private val log = LoggerFactory.getLogger(KakaoSearchStrategy::class.java)
+
+    private val blogSource = BlogSource.KAKAO
 
     private val supportedSorts = mapOf("score" to "accuracy", "latest" to "recency")
 
@@ -43,6 +43,8 @@ class KakaoSearchStrategy(
     override fun setBlogSearchPriority() {
         blogSearchPriority = blogSearchPriorityRepository.findBySource(blogSource)
     }
+
+    override fun getBlogSource(): BlogSource = blogSource
 
     @HystrixCommand(commandKey = "searchkakaoBlog", fallbackMethod = "searchkakaoBlogFallback")
     override fun searchBlog(
