@@ -11,6 +11,9 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import java.time.ZonedDateTime
 
+/**
+ * 카카오 블로그 서치 결과 dto.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class KakaoBlogSearchResult(
     val meta: SearchMeta,

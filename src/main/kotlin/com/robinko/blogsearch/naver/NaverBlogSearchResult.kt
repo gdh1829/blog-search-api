@@ -14,13 +14,11 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+/**
+ * 네이버 블로그 검색 결과 dto.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class NaverBlogSearchResult(
-    /**
-     * ex. Sat, 18 Mar 2023 22:48:37 +09:00
-     * TODO RFC1123 포멧?
-     * @DateTimeFormat(pattern = "EEE, DD MMM YYYY hh:mm:ss xxx")
-     */
     val lastBuildDate: String,
     val total: Long,
     val start: Int,

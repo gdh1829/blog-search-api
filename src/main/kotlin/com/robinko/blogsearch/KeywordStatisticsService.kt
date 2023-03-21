@@ -1,6 +1,7 @@
 package com.robinko.blogsearch
 
 import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -15,8 +16,8 @@ class KeywordStatisticsService(
     private val log = LoggerFactory.getLogger(KeywordStatisticsService::class.java)
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    fun updateSearchCount(keyword: String): KeywordStatistics {
-        return keywordStatisticsRepository.findByIdOrNull(keyword)
+    fun updateSearchCount(keyword: String) {
+        keywordStatisticsRepository.findByIdOrNull(keyword)
             ?.also {
                 keywordStatisticsRepository.updateSearchCount(keyword)
                     .also { log.debug("KeywordStatistics search count updated: $it") }
@@ -35,5 +36,10 @@ class KeywordStatisticsService(
     @Transactional(readOnly = true)
     @Cacheable(value = ["Top10Keywords"])
     fun findTop10Keywords(): List<KeywordStatistics> =
+        keywordStatisticsRepository.findTop10ByOrderBySearchCountDescUpdatedTimeDesc()
+
+    @Transactional(readOnly = true)
+    @CachePut(value = ["Top10Keywords"])
+    fun refreshTop10Keywords(): List<KeywordStatistics> =
         keywordStatisticsRepository.findTop10ByOrderBySearchCountDescUpdatedTimeDesc()
 }

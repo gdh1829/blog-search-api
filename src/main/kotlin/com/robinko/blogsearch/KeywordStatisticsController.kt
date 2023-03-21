@@ -11,9 +11,15 @@ class KeywordStatisticsController(
     private val keywordStatisticsService: KeywordStatisticsService,
 ) {
 
+    /**
+     * 상위 10개의 핫키워드 조회 API.
+     */
     @GetMapping("/keywordStatistics", params = ["top10=true"])
     fun getTop10Keywords(): List<KeywordStatistics> = keywordStatisticsService.findTop10Keywords()
 
+    /**
+     * 키워드 통계 제거 API.
+     */
     @DeleteMapping("/admin/keywordStatistics/{keyword}")
     fun deleteKeywordStatistics(
         @PathVariable keyword: String

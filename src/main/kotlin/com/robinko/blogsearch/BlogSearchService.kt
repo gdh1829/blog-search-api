@@ -5,8 +5,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.Comparator
-import java.util.SortedMap
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 
 @Transactional(readOnly = true)
 @Service
@@ -15,7 +15,7 @@ class BlogSearchService(
 ) {
     private val log = LoggerFactory.getLogger(BlogSearchService::class.java)
 
-    private var searchSources: SortedMap<Int, SearchBlogStrategy> = sortedMapOf()
+    private var searchSources: ConcurrentMap<Int, SearchBlogStrategy> = ConcurrentHashMap()
 
     fun searchBlog(query: String, page: Int, size: Int, sort: String?): ExternalSearchResult? {
         var searchResult: ExternalSearchResult? = null
@@ -32,14 +32,14 @@ class BlogSearchService(
     }
 
     /**
-     * 검색소스 우선 순위 데이터 로드.
+     * 애플리케이션 초기 기동 준비 완료시, 검색소스 우선 순위 데이터 로드.
      */
     @EventListener(ApplicationReadyEvent::class)
     fun refreshSearchBlogStrategyPriorities() {
         searchBlogStrategies.forEach { it.setBlogSearchPriority() }
-        searchSources = searchBlogStrategies
-            .filter { it.getBlogSearchPriority() != null }
+        searchSources.putAll(searchBlogStrategies
+            .filter { it.getBlogSearchPriority() != null && it.getBlogSearchPriority()!!.use }
             .associateBy { it.getBlogSearchPriority()!!.priority }
-            .toSortedMap(Comparator.naturalOrder())
+            .toSortedMap(Comparator.naturalOrder()))
     }
 }

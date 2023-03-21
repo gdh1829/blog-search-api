@@ -12,6 +12,9 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Version
 
+/**
+ * 외부 연동 블로그 검색 서비스(카카오/네이버 등)에 대한 검색 우선 순위 관리 entity.
+ */
 @Entity
 data class BlogSearchPriority(
     @Id
@@ -30,7 +33,7 @@ data class BlogSearchPriority(
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     val updatedTime: LocalDateTime = LocalDateTime.now(),
 
-    @Convert(converter = SourceBlogStringConverter::class)
+    @Convert(converter = BlogSourceStringConverter::class)
     @Column(unique = true)
     val source: BlogSource,
 

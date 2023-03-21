@@ -10,17 +10,15 @@ import org.springframework.transaction.annotation.Transactional
 @Profile("scheduled")
 @Service
 class ScheduledService(
-    private val keywordStatisticsRepository: KeywordStatisticsRepository
+    private val keywordStatisticsService: KeywordStatisticsService
 ) {
 
     /**
-     * 5분 단위로 상위 10 인기 키워드 캐시를 갱신.
+     * 5분 단위로 상위 10 인기 키워드 캐시를 갱신 스케줄러.
      */
-    @Transactional(readOnly = true)
-    @CachePut(value = ["Top10Keywords"])
-    @Scheduled(cron = " * */5 * * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "*/5 * * * * *", zone = "Asia/Seoul")
     @SchedulerLock(name = "refreshCacheTop10Keywords", lockAtMostFor = "PT10M")
     fun refreshCacheTop10Keywords() {
-        keywordStatisticsRepository.findTop10ByOrderBySearchCountDescUpdatedTimeDesc()
+        keywordStatisticsService.refreshTop10Keywords()
     }
 }

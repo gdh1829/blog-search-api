@@ -10,6 +10,9 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 
+/**
+ * 유저 검색 쿼리를 표준화한 키워드로 조회수 집계 Entity.
+ */
 @Where(clause = "deletedTime is null")
 @SQLDelete(sql = "UPDATE KeywordStatistics SET deletedTime = now() WHERE keyword = ?")
 @Entity

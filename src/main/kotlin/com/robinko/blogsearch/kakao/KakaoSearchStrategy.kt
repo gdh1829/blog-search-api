@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component
 import java.net.URLEncoder
 import java.net.http.HttpClient
 
+/**
+ * 카카오 검색 서비스 전략.
+ */
 @Component
 class KakaoSearchStrategy(
     @Value("\${kakao.auth.prefix}")
@@ -48,7 +51,9 @@ class KakaoSearchStrategy(
         size: Int,
         sort: String?
     ): ExternalSearchResult? {
-        val refinedSort = sort?.takeIf { it.isNotBlank() && supportedSorts.keys.contains(it) } ?: supportedSorts.values.first()
+        val refinedSort = sort?.takeIf { it.isNotBlank() && supportedSorts.keys.contains(it) }
+            ?.let { supportedSorts[it] }
+            ?: supportedSorts.values.first()
         val params = "page=$page&size=$size&query=${URLEncoder.encode(query, Charsets.UTF_8)}&sort=$refinedSort"
 
         return getExternalResources(

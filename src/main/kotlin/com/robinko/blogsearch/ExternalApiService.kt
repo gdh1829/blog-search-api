@@ -14,6 +14,9 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
+/**
+ * 외부 연동 서비스 호출에 대한 추상 클래스.
+ */
 abstract class ExternalApiService(
     private val httpClient: HttpClient
 ) {

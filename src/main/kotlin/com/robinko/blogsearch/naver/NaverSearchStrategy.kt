@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component
 import java.net.URLEncoder
 import java.net.http.HttpClient
 
+/**
+ * 네이버 검색 서비스 전략.
+ */
 @Component
 class NaverSearchStrategy(
     @Value("\${naver.auth.clientId}")

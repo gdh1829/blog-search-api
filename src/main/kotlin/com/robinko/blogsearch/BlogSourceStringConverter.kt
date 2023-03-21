@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component
 import javax.persistence.AttributeConverter
 
 @Component
-class SourceBlogStringConverter : AttributeConverter<BlogSource, String> {
+class BlogSourceStringConverter : AttributeConverter<BlogSource, String> {
 
-    private val log = LoggerFactory.getLogger(SourceBlogStringConverter::class.java)
+    private val log = LoggerFactory.getLogger(BlogSourceStringConverter::class.java)
     override fun convertToDatabaseColumn(attribute: BlogSource?): String? {
         return attribute?.name
     }

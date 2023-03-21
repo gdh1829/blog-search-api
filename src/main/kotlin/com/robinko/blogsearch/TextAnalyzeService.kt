@@ -7,6 +7,9 @@ import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
+/**
+ * 텍스트 키워드 분석 서비스.
+ */
 @Service
 class TextAnalyzeService(
     private val snsService: SnsService
