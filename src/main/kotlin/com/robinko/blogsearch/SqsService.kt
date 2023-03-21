@@ -1,8 +1,6 @@
 package com.robinko.blogsearch
 
-import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
-import com.amazonaws.regions.Regions
-import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder
+import com.amazonaws.services.sqs.AmazonSQSAsync
 import com.amazonaws.services.sqs.model.DeleteMessageBatchRequestEntry
 import com.amazonaws.services.sqs.model.Message
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest
@@ -22,20 +20,13 @@ import javax.annotation.PreDestroy
 @Service
 @Profile("sqs")
 class SqsService(
-    @Value("\${localstack.endpoint}")
-    private val endpoint: String,
-    @Value("\${localstack.region:}")
-    private val region: String,
     @Value("\${localstack.sqs.queueUrl}")
     private val queueUrl: String,
-    private val keywordStatisticsService: KeywordStatisticsService
+    private val keywordStatisticsService: KeywordStatisticsService,
+    private val sqs: AmazonSQSAsync
 ) {
 
     private val log = LoggerFactory.getLogger(SqsService::class.java)
-
-    private val sqs = AmazonSQSAsyncClientBuilder.standard()
-        .withEndpointConfiguration(EndpointConfiguration(endpoint, region))
-        .build()
 
     private val om: ObjectMapper = jacksonObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

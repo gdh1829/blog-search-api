@@ -1,14 +1,16 @@
 package com.robinko.blogsearch
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.amazonaws.auth.AWSStaticCredentialsProvider
+import com.amazonaws.auth.BasicAWSCredentials
+import com.amazonaws.client.builder.AwsClientBuilder
+import com.amazonaws.services.sns.AmazonSNS
+import com.amazonaws.services.sns.AmazonSNSClientBuilder
+import com.amazonaws.services.sqs.AmazonSQSAsync
+import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder
 import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -19,7 +21,6 @@ import java.net.http.HttpClient
 import javax.sql.DataSource
 
 @EnableCircuitBreaker
-// @EnableJpaRepositories(basePackages = ["com.robinko.blogsearch"])
 @EnableJpaRepositories
 @EnableSchedulerLock(defaultLockAtLeastFor = "PT30S", defaultLockAtMostFor = "PT60S")
 @Import(CommonConfig::class)
@@ -41,8 +42,22 @@ class ApplicationConfig {
         .build()
 
     @Bean
-    fun om(): ObjectMapper = jacksonObjectMapper()
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-        .registerModules(JavaTimeModule(), Jdk8Module())
+    fun sns(
+        @Value("\${localstack.endpoint:}") endpoint: String,
+        @Value("\${localstack.region:}") region: String,
+    ): AmazonSNS = AmazonSNSClientBuilder.standard()
+        .withEndpointConfiguration(AwsClientBuilder.EndpointConfiguration(endpoint, region))
+        // set dummy credentials to avoid sdk error. Localstack does not have IAM authentication mechanism
+        .withCredentials(AWSStaticCredentialsProvider(BasicAWSCredentials("default", "default")))
+        .build()
+
+    @Bean
+    fun sqs(
+        @Value("\${localstack.endpoint}") endpoint: String,
+        @Value("\${localstack.region:}") region: String,
+    ): AmazonSQSAsync = AmazonSQSAsyncClientBuilder.standard()
+        .withEndpointConfiguration(AwsClientBuilder.EndpointConfiguration(endpoint, region))
+        // set dummy credentials to avoid sdk error. Localstack does not have IAM authentication mechanism
+        .withCredentials(AWSStaticCredentialsProvider(BasicAWSCredentials("default", "default")))
+        .build()
 }

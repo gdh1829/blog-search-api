@@ -1,8 +1,6 @@
 package com.robinko.blogsearch
 
-import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
-import com.amazonaws.regions.Regions
-import com.amazonaws.services.sns.AmazonSNSClientBuilder
+import com.amazonaws.services.sns.AmazonSNS
 import com.amazonaws.services.sns.model.PublishRequest
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -17,18 +15,11 @@ import javax.annotation.PreDestroy
 
 @Service
 class SnsService(
-    @Value("\${localstack.endpoint:}")
-    private val endpoint: String,
-    @Value("\${localstack.region:}")
-    private val region: String,
     @Value("\${localstack.sns.topicPrefix:}")
-    private val snsTopicPrefix: String
+    private val snsTopicPrefix: String,
+    private val sns: AmazonSNS
 ) {
     private val log = LoggerFactory.getLogger(SnsService::class.java)
-
-    private val snsClient = AmazonSNSClientBuilder.standard()
-        .withEndpointConfiguration(EndpointConfiguration(endpoint, region))
-        .build()
 
     private val om = jacksonObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -37,13 +28,13 @@ class SnsService(
 
     @PreDestroy
     fun destroy() {
-        snsClient.shutdown()
+        sns.shutdown()
     }
 
     @Async
     fun publish(snsEvent: SnsEvent) {
         PublishRequest("$snsTopicPrefix${snsEvent.entityName}", om.writeValueAsString(snsEvent))
-            .let { snsClient.publish(it) }
+            .let { sns.publish(it) }
             .also { log.info("AWS SNS $snsTopicPrefix publish result: $it") }
     }
 }
