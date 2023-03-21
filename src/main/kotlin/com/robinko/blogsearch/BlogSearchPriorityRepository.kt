@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface BlogSearchPriorityRepository: JpaRepository<BlogSearchPriority, Long> {
 
-    fun findBySource(source: SourceBlog): BlogSearchPriority?
+    fun findBySource(source: BlogSource): BlogSearchPriority?
 }

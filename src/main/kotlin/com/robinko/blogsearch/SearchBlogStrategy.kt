@@ -1,7 +1,7 @@
 package com.robinko.blogsearch
 
 interface SearchBlogStrategy {
-    val sourceBlog: SourceBlog
+    val blogSource: BlogSource
 
     fun getBlogSearchPriority(): BlogSearchPriority?
 
@@ -15,7 +15,7 @@ interface SearchBlogStrategy {
     ): ExternalSearchResult?
 }
 
-enum class SourceBlog {
+enum class BlogSource {
     KAKAO,
     NAVER
 }

@@ -5,17 +5,17 @@ import org.springframework.stereotype.Component
 import javax.persistence.AttributeConverter
 
 @Component
-class SourceBlogStringConverter : AttributeConverter<SourceBlog, String> {
+class SourceBlogStringConverter : AttributeConverter<BlogSource, String> {
 
     private val log = LoggerFactory.getLogger(SourceBlogStringConverter::class.java)
-    override fun convertToDatabaseColumn(attribute: SourceBlog?): String? {
+    override fun convertToDatabaseColumn(attribute: BlogSource?): String? {
         return attribute?.name
     }
 
-    override fun convertToEntityAttribute(dbData: String?): SourceBlog? {
+    override fun convertToEntityAttribute(dbData: String?): BlogSource? {
         return dbData
             ?.takeIf { it.isNotBlank() }
-            ?.runCatching { SourceBlog.valueOf(this) }
+            ?.runCatching { BlogSource.valueOf(this) }
             ?.onFailure { log.error("Failed to convert to entity attr: $dbData", it) }
             ?.getOrNull()
     }

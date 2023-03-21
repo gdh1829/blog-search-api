@@ -43,7 +43,8 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         val now = LocalDateTime.now(zoneOffset)
         val message = when {
             ex is ResponseStatusException -> ex.reason ?: ex.localizedMessage
-            ex is MethodArgumentNotValidException -> ex.allErrors.map { "${it.defaultMessage}" }.joinToString("\n")
+            ex is MethodArgumentNotValidException ->
+                ex.allErrors.map { "${it.defaultMessage}" }.joinToString("\n")
             status.is5xxServerError -> "내부 서버 오류. 관리자에게 문의하세요."
             status.is4xxClientError -> "잘못된 요청입니다."
             else -> "알 수 없는 오류. 관리자에게 문의하세요."

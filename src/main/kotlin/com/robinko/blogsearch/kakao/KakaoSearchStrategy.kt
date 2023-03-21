@@ -8,12 +8,11 @@ import com.robinko.blogsearch.BlogSearchPriorityRepository
 import com.robinko.blogsearch.ExternalApiService
 import com.robinko.blogsearch.ExternalSearchResult
 import com.robinko.blogsearch.SearchBlogStrategy
-import com.robinko.blogsearch.SourceBlog
+import com.robinko.blogsearch.BlogSource
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.net.URLEncoder
-import javax.annotation.PostConstruct
 
 @Component
 class KakaoSearchStrategy(
@@ -25,7 +24,7 @@ class KakaoSearchStrategy(
     private val host: String,
     private val blogSearchPriorityRepository: BlogSearchPriorityRepository
 ): ExternalApiService(), SearchBlogStrategy {
-    final override val sourceBlog = SourceBlog.KAKAO
+    final override val blogSource = BlogSource.KAKAO
 
     private val log = LoggerFactory.getLogger(KakaoSearchStrategy::class.java)
 
@@ -37,7 +36,7 @@ class KakaoSearchStrategy(
 
     override fun getBlogSearchPriority(): BlogSearchPriority? = blogSearchPriority
     override fun setBlogSearchPriority() {
-        blogSearchPriority = blogSearchPriorityRepository.findBySource(sourceBlog)
+        blogSearchPriority = blogSearchPriorityRepository.findBySource(blogSource)
     }
 
     @HystrixCommand(commandKey = "searchkakaoBlog", fallbackMethod = "searchkakaoBlogFallback")

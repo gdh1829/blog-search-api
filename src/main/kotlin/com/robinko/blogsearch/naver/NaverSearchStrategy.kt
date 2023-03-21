@@ -8,12 +8,11 @@ import com.robinko.blogsearch.BlogSearchPriorityRepository
 import com.robinko.blogsearch.ExternalApiService
 import com.robinko.blogsearch.ExternalSearchResult
 import com.robinko.blogsearch.SearchBlogStrategy
-import com.robinko.blogsearch.SourceBlog
+import com.robinko.blogsearch.BlogSource
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.net.URLEncoder
-import javax.annotation.PostConstruct
 
 @Component
 class NaverSearchStrategy(
@@ -27,7 +26,7 @@ class NaverSearchStrategy(
 ): ExternalApiService(), SearchBlogStrategy {
     private val log = LoggerFactory.getLogger(NaverSearchStrategy::class.java)
 
-    final override val sourceBlog = SourceBlog.NAVER
+    final override val blogSource = BlogSource.NAVER
 
     private val supportedSorts = mapOf("score" to "sim", "latest" to "date")
 
@@ -39,7 +38,7 @@ class NaverSearchStrategy(
     override fun getBlogSearchPriority(): BlogSearchPriority? = blogSearchPriority
 
     override fun setBlogSearchPriority() {
-        blogSearchPriority = blogSearchPriorityRepository.findBySource(sourceBlog)
+        blogSearchPriority = blogSearchPriorityRepository.findBySource(blogSource)
     }
 
     @HystrixCommand(commandKey = "searchNaverBlog", fallbackMethod = "searchNaverBlogFallback")

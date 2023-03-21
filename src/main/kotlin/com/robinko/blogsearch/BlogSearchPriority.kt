@@ -32,7 +32,7 @@ data class BlogSearchPriority(
 
     @Convert(converter = SourceBlogStringConverter::class)
     @Column(unique = true)
-    val source: SourceBlog,
+    val source: BlogSource,
 
     val use: Boolean = false,
 

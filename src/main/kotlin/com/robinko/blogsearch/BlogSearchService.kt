@@ -21,7 +21,7 @@ class BlogSearchService(
         var searchResult: ExternalSearchResult? = null
 
         searchSources.values.takeWhile { strategy ->
-            log.info("trying to search blog from ${strategy.sourceBlog}")
+            log.info("trying to search blog from ${strategy.blogSource}")
             strategy.searchBlog(query, page, size, sort)
                 ?.also { searchResult = it }
                 ?.let { false }
