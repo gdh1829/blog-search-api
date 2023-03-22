@@ -1,6 +1,9 @@
 # search-blog-api
 - 외부 블로그 검색 연동 애플리케이션입니다.
 
+## Jar 파일 다운로드 링크
+- https://drive.google.com/file/d/1HtZ7DvIrDZfSjvc13IsUq2K0vpqSD802/view?usp=sharing
+
 ## API 명세
 - [api-spec.md](./api-spec.md) 파일 참조.
 - 디폴트 데이터가 초기 기동과 함께 셋팅되기 때문에 로컬에서 기동 후 swagger을 통해 명세 확인 및 실행해볼 수 있다.
