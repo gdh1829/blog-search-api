@@ -1,5 +1,9 @@
 # search-blog-api
 
+## API 명세
+- [api-spec.md](./api-spec.md) 파일 참조.
+- 디폴트 데이터가 초기 기동과 함께 셋팅되기 때문에 로컬에서 기동 후 swagger을 통해 명세 확인 및 실행해볼 수 있다.
+
 ## 애플리케이션 기동 전 사전 설치 사항: Mac 기준
 - awscli
 ```shell
@@ -51,18 +55,19 @@ aws --endpoint-url http://localhost:4566 sns list-subscriptions-by-topic --topic
   - 한국어 형태소 분석기로서, 유저의 블로그 검색 쿼리에 대하여 형태소 분석을 하여 명사형 어휘를 뽑아 키워드를 만들고, 이를 키워드 통계에 반영하기 위해 사용합니다.
 - jasypt-spring-boot-starter
   - application.yml 파일에 기재되는 비밀번호/토큰과 같은 민감정보를 암호화합니다.
-
-## 필수 요구사항
-- 블로그 검색
-  - GET /blogs?query={}&page={}&size={}&sort={}
-- 인기 검색어 목록
-  - GET /keywordStatistics?top10=true
+- swagger
+  - API 명세 문서 자동화 목적.
 
 ## 필수 요구사항 외 추가 구현 사항
-### 블로그 검색 소스(카카오/네이버/etc) 우선순위 스위칭 기능.
+
+### 블로그 검색 소스(카카오/네이버/etc) 
+
+#### DB 데이터 조회 기능.
 - BlogSearchPriority Entity
   - 블로그 검색 소스 우선 순위가 데이터로 관리된다.
   - on/off 또는 priority 속성을 갖는다.
+  
+#### 우선순위 스위칭 기능.
 - 블로그 검색 소스 스위칭
   - 서킷브레이커를 통해 우선 검색 소스의 장애 발생시 차단을 통해 다음 차순위의 검색 소스가 사용되지만,
   - 외부 연동 서비스의 전면적인 장기 장애로 확정시, 서킷브레이커에 불필요한 의존보다는 
