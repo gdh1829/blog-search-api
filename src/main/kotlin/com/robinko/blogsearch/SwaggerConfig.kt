@@ -66,11 +66,11 @@ class SwaggerConfig {
 
     @ApiModel
     data class PageableSwagger(
-        @ApiModelProperty(value = "페이지 번호", allowableValues = "range[1, -infinity]", example = "1")
+        @ApiModelProperty(value = "페이지 번호")
         val page: Int,
-        @ApiModelProperty(value = "페이지 사이즈", allowableValues = "range[1, -infinity]", example = "20")
+        @ApiModelProperty(value = "페이지 사이즈")
         val size: Int,
-        @ApiModelProperty(value = "정렬(score, latest만 허용 in GET /blogSearchPriorities API)")
+        @ApiModelProperty(value = "only allowed:GET/blogSearch->score,latest & GET/blogSearchPriorities->priority,serverId)")
         val sort: String
     )
 }
