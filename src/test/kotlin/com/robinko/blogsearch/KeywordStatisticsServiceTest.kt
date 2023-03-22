@@ -120,7 +120,24 @@ class KeywordStatisticsServiceTest {
             .willReturn(listOf(KeywordStatistics(keyword = "apple", searchCount = 1)))
 
         // action
-        val result = keywordStatisticsService.findTop10Keywords()
+        val result = keywordStatisticsService.getTop10Keywords()
+
+        // verify
+        assertAll(
+            {
+                Assertions.assertThat(result).isNotEmpty
+            }
+        )
+    }
+
+    @Test
+    fun `refreshTop10Keywords`() {
+        // arrange
+        BDDMockito.given(keywordStatisticsRepository.findTop10ByOrderBySearchCountDescUpdatedTimeDesc())
+            .willReturn(listOf(KeywordStatistics(keyword = "apple", searchCount = 1)))
+
+        // action
+        val result = keywordStatisticsService.getTop10Keywords()
 
         // verify
         assertAll(

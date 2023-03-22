@@ -3,15 +3,16 @@ package com.robinko.blogsearch
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
-@Transactional
 @Service
 class KeywordStatisticsService(
-    private val keywordStatisticsRepository: KeywordStatisticsRepository
+    private val keywordStatisticsRepository: KeywordStatisticsRepository,
+    private val eventPublisher: ApplicationEventPublisher
 ) {
     private val log = LoggerFactory.getLogger(KeywordStatisticsService::class.java)
 
@@ -26,16 +27,17 @@ class KeywordStatisticsService(
                 .also { log.debug("KeywordStatistics newly saved: $it") }
     }
 
+    @Transactional
     fun deleteKeywordStatistics(keyword: String) =
         keywordStatisticsRepository.findByIdOrNull(keyword)
             ?.also {
                 keywordStatisticsRepository.delete(it)
                 log.info("KeywordStatistics deleted: $it")
-            }
+            }?.also { eventPublisher.publishEvent(KeywordStatisticsDeleteEvent(it)) }
 
     @Transactional(readOnly = true)
     @Cacheable(value = ["Top10Keywords"])
-    fun findTop10Keywords(): List<KeywordStatistics> =
+    fun getTop10Keywords(): List<KeywordStatistics> =
         keywordStatisticsRepository.findTop10ByOrderBySearchCountDescUpdatedTimeDesc()
 
     @Transactional(readOnly = true)
