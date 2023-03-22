@@ -20,13 +20,16 @@ import org.springframework.web.server.ResponseStatusException
 class BlogSearchController(
     private val blogService: BlogService
 ) {
+    private val allowedSortFields = listOf("score", "latest")
+
     @ApiOperation(
         "블로그 서치 API.",
         notes = "카카오/네이버 등의 블로그 소스로부터 query를 질의한 결과를 반환하며, BlogSearchEvent를 발생시킵니다."
     )
     @ApiResponses(
         ApiResponse(code = 200, message = "success"),
-        ApiResponse(code = 400, message = "Bad request."),
+        ApiResponse(code = 400, message = "PageNumber must start from 1."),
+        ApiResponse(code = 400, message = "score,latest are only allowed to sort param."),
         ApiResponse(code = 500, message = "Internal server error.")
     )
     @GetMapping("/blogs")
@@ -37,6 +40,13 @@ class BlogSearchController(
     ): ResponseEntity<Page<BlogDoc>> {
         if (pageable.pageNumber < 1) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "PageNumber must start from 1.")
+        }
+
+        if (pageable.sort.any { !allowedSortFields.contains(it.property) }) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "${allowedSortFields.joinToString(",")} are only allowed to sort param."
+            )
         }
 
         return blogService.searchBlog(query, pageable)

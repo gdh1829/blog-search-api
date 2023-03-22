@@ -92,4 +92,27 @@ class BlogSearchControllerTest {
             { verifyNoInteractions(blogService) }
         )
     }
+
+    @Test
+    fun `searchBlog with invalid sort param then bad request`() {
+        // arrange
+        val query = "kotiln"
+
+        // action
+        mockMvc.perform(
+            get("/blogs")
+                .param("query", query)
+                .param("sort", "abc")
+                .param("page", "0")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        ).andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.handler().methodName(BlogSearchController::searchBlog.name))
+
+        // verify
+        assertAll(
+            { verifyNoInteractions(blogService) }
+        )
+    }
 }

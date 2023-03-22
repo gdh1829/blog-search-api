@@ -70,7 +70,7 @@ class SwaggerConfig {
         val page: Int,
         @ApiModelProperty(value = "페이지 사이즈", allowableValues = "range[1, -infinity]", example = "20")
         val size: Int,
-        @ApiModelProperty(value = "정렬", allowableValues = "score, latest", example = "score")
+        @ApiModelProperty(value = "정렬(score, latest만 허용 in GET /blogSearchPriorities API)")
         val sort: String
     )
 }

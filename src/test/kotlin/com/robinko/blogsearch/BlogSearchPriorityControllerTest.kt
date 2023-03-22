@@ -97,4 +97,29 @@ class BlogSearchPriorityControllerTest {
             }
         )
     }
+
+    @Test
+    fun `getPagedBlogSearchPriorities with not allowed sort param values then bad request`() {
+        // arrange
+
+        // action
+        mockMvc.perform(
+            get("/blogSearchPriorities")
+                .param("sort", "abc")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        ).andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(
+                MockMvcResultMatchers.handler().methodName(BlogSearchPriorityController::getPagedBlogSearchPriorities.name)
+            )
+
+        // verify
+        assertAll(
+            {
+                verify(blogSearchPriorityRepository, times(0))
+                    .findAll(nonNullAny(Pageable::class.java))
+            }
+        )
+    }
 }
