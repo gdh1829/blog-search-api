@@ -1,11 +1,9 @@
 package com.robinko.blogsearch
 
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
-import org.springframework.cache.annotation.CachePut
 import org.springframework.context.annotation.Profile
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Profile("scheduled")
 @Service

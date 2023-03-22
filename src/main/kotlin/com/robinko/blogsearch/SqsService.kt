@@ -47,7 +47,7 @@ class SqsService(
 
         val messages = sqs.receiveMessage(request).messages
         if (messages.isEmpty()) {
-            Thread.sleep(10_000L)
+            Thread.sleep(5_000L)
             return
         }
 
