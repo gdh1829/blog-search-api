@@ -13,6 +13,7 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.context.ApplicationEventPublisher
 import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
@@ -23,6 +24,9 @@ class KeywordStatisticsServiceTest {
 
     @Mock
     private lateinit var keywordStatisticsRepository: KeywordStatisticsRepository
+
+    @Mock
+    private lateinit var eventPublisher: ApplicationEventPublisher
 
     @Test
     fun `updateSearchCount when previous exists then update count`() {
@@ -90,6 +94,10 @@ class KeywordStatisticsServiceTest {
             {
                 verify(keywordStatisticsRepository, times(1))
                     .delete(nonNullAny(KeywordStatistics::class.java))
+            },
+            {
+                verify(eventPublisher, times(1))
+                    .publishEvent(nonNullAny(KeywordStatisticsDeleteEvent::class.java))
             }
         )
     }

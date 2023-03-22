@@ -27,7 +27,7 @@ class KeywordStatisticsControllerTest {
     @Test
     fun `getTop10Keywords success`() {
         // arrange
-        given(keywordStatisticsService.findTop10Keywords()).willReturn(emptyList())
+        given(keywordStatisticsService.getTop10Keywords()).willReturn(emptyList())
 
         // action
         mockMvc.perform(
@@ -41,7 +41,7 @@ class KeywordStatisticsControllerTest {
 
         // verify
         assertAll(
-            { verify(keywordStatisticsService, times(1)).findTop10Keywords() },
+            { verify(keywordStatisticsService, times(1)).getTop10Keywords() },
         )
     }
 

@@ -5,15 +5,15 @@ INSERT INTO BLOGSEARCHPRIORITY (version, createdTime, updatedTime, `source`, use
 ;
 
 INSERT INTO KEYWORDSTATISTICS(keyword, createdTime, updatedTime, deletedTime, searchCount) VALUES
-('사과', now(), now(), null, 40),
-('제주도', now(), now(), null, 30),
-('여행', now(), now(), null, 10),
-('프로그래밍', now(), now(), null, 26),
-('코틀린', now(), now(), null, 10),
+('사과', now(), now(), null, 5),
+('제주도', now(), now(), null, 10),
+('여행', now(), now(), null, 3),
+('프로그래밍', now(), now(), null, 7),
+('코틀린', now(), now(), null, 2),
 ('농구', now(), now(), null, 10),
-('브런치', now(), now(), null, 50),
-('일기', now(), now(), null, 10),
-('깃헙', now(), now(), null, 11),
-('맥북', now(), now(), null, 30),
-('전래동화', now(), now(), null, 7)
+('브런치', now(), now(), null, 3),
+('일기', now(), now(), null, 5),
+('깃헙', now(), now(), null, 6),
+('맥북', now(), now(), null, 9),
+('전래동화', now(), now(), null, 6)
 ;

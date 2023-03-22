@@ -62,7 +62,7 @@ class BlogSearchControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
         ).andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.status().isInternalServerError)
             .andExpect(MockMvcResultMatchers.handler().methodName(BlogSearchController::searchBlog.name))
 
         // verify

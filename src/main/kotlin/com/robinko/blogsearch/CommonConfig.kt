@@ -22,7 +22,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 @EnableEncryptableProperties
 @ComponentScan(basePackageClasses = [CommonConfig::class])
 @Import(
-    PropertyEncryptConfig::class
+    PropertyEncryptConfig::class,
+    SwaggerConfig::class
 )
 class CommonConfig : AsyncConfigurer, TaskSchedulerCustomizer {
 
