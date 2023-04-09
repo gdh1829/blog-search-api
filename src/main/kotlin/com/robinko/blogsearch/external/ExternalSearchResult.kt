@@ -1,5 +1,6 @@
-package com.robinko.blogsearch
+package com.robinko.blogsearch.external
 
+import com.robinko.blogsearch.BlogDoc
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 

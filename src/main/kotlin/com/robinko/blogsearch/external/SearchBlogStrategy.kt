@@ -1,4 +1,6 @@
-package com.robinko.blogsearch
+package com.robinko.blogsearch.external
+
+import com.robinko.blogsearch.BlogSearchPriority
 
 /**
  * 카카오 외에 네이버 등의 외부 연동 블로그 검색 전략 인터페이스.

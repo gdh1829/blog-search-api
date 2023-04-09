@@ -1,14 +1,13 @@
-package com.robinko.blogsearch
+package com.robinko.blogsearch.external
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.robinko.blogsearch.kakao.KakaoBlogDoc
-import com.robinko.blogsearch.kakao.KakaoBlogSearchResult
-import com.robinko.blogsearch.kakao.KakaoSearchStrategy
-import com.robinko.blogsearch.kakao.SearchMeta
+import com.robinko.blogsearch.BlogSearchPriority
+import com.robinko.blogsearch.BlogSearchPriorityRepository
+import com.robinko.blogsearch.nonNullAny
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -20,17 +19,16 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.net.http.HttpResponse.BodyHandler
-import java.time.ZonedDateTime
 
 @ExtendWith(MockitoExtension::class)
-class KakaoSearchStrategyTest {
+class NaverSearchStrategyTest {
 
     private val blogSearchPriorityRepository = Mockito.mock(BlogSearchPriorityRepository::class.java)
     private val httpClient = Mockito.mock(HttpClient::class.java)
 
-    private val kakaoSearchStrategy = KakaoSearchStrategy(
-        "KakaoAK",
-        "accessKey",
+    private val naverSearchStrategy = NaverSearchStrategy(
+        "X-Naver-Client-Id",
+        "X-Naver-Client-Secret",
         "http://localhost",
         blogSearchPriorityRepository,
         httpClient
@@ -45,31 +43,34 @@ class KakaoSearchStrategyTest {
     fun setBlogSearchPriority() {
         // arrange
         val blogSearchPriorityMock = Mockito.mock(BlogSearchPriority::class.java)
-        BDDMockito.given(blogSearchPriorityRepository.findBySource(BlogSource.KAKAO))
+        BDDMockito.given(blogSearchPriorityRepository.findBySource(BlogSource.NAVER))
             .willReturn(blogSearchPriorityMock)
 
         // action
-        var result = kakaoSearchStrategy.getBlogSearchPriority()
+        var result = naverSearchStrategy.getBlogSearchPriority()
         // verify
         Assertions.assertThat(result).isNull()
 
         // action
-        kakaoSearchStrategy.setBlogSearchPriority()
-        result = kakaoSearchStrategy.getBlogSearchPriority()
+        naverSearchStrategy.setBlogSearchPriority()
+        result = naverSearchStrategy.getBlogSearchPriority()
         // verify
         Assertions.assertThat(result).isNotNull
     }
 
     @Test
-    fun `searchBlog when comunication success with kakao then return KakaoBlogSearchResult`() {
+    fun `searchBlog when comunication success with naver then return KakaoBlogSearchResult`() {
         // arrange
-        val query = "kakao"
+        val query = "naver"
         val page = 1
         val size = 10
         val sort = "score"
-        val responseBody = KakaoBlogSearchResult(
-            SearchMeta(10L, 10L, false),
-            listOf(KakaoBlogDoc("blog", "contents", ZonedDateTime.now(), null, "title", "url"))
+        val responseBody = NaverBlogSearchResult(
+            "Sat, 18 Mar 2023 22:48:37 +09:00", 10L, 1, 5,
+            listOf(
+                NaverBlogDoc("blog", "link", "description", "blogName",
+                    "blogLink", "20230301")
+            )
         )
         val httpResponseStub = BDDMockito.mock(HttpResponse::class.java).apply {
             BDDMockito.given(statusCode()).willReturn(HttpStatus.OK.value())
@@ -79,17 +80,17 @@ class KakaoSearchStrategyTest {
             .willReturn(httpResponseStub)
 
         // action
-        val result: ExternalSearchResult? = kakaoSearchStrategy.searchBlog(query, page, size, sort)
+        val result: ExternalSearchResult? = naverSearchStrategy.searchBlog(query, page, size, sort)
 
         // verify
         Assertions.assertThat(result).isNotNull
-        Assertions.assertThat(result).isInstanceOf(KakaoBlogSearchResult::class.java)
+        Assertions.assertThat(result).isInstanceOf(NaverBlogSearchResult::class.java)
     }
 
     @Test
-    fun `searchBlog when comunication failure with kakao then return null`() {
+    fun `searchBlog when comunication failure with naver then return null`() {
         // arrange
-        val query = "kakao"
+        val query = "naver"
         val page = 1
         val size = 10
         val sort = "score"
@@ -100,7 +101,7 @@ class KakaoSearchStrategyTest {
             .willReturn(httpResponseStub)
 
         // action
-        val result: ExternalSearchResult? = kakaoSearchStrategy.searchBlog(query, page, size, sort)
+        val result: ExternalSearchResult? = naverSearchStrategy.searchBlog(query, page, size, sort)
 
         // verify
         Assertions.assertThat(result).isNull()

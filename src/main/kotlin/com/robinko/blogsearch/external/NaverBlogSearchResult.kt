@@ -1,10 +1,8 @@
-package com.robinko.blogsearch.naver
+package com.robinko.blogsearch.external
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.robinko.blogsearch.BlogDoc
-import com.robinko.blogsearch.ExternalBlogDoc
-import com.robinko.blogsearch.ExternalSearchResult
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest

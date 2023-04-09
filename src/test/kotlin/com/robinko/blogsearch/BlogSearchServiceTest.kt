@@ -1,8 +1,9 @@
 package com.robinko.blogsearch
 
-import com.robinko.blogsearch.kakao.KakaoSearchStrategy
-import com.robinko.blogsearch.naver.NaverBlogSearchResult
-import com.robinko.blogsearch.naver.NaverSearchStrategy
+import com.robinko.blogsearch.external.BlogSource
+import com.robinko.blogsearch.external.KakaoSearchStrategy
+import com.robinko.blogsearch.external.NaverBlogSearchResult
+import com.robinko.blogsearch.external.NaverSearchStrategy
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

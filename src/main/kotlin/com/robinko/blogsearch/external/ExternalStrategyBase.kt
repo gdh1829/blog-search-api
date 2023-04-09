@@ -1,4 +1,4 @@
-package com.robinko.blogsearch
+package com.robinko.blogsearch.external
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -17,7 +17,7 @@ import java.net.http.HttpResponse
 /**
  * 외부 연동 서비스 호출에 대한 추상 클래스.
  */
-abstract class ExternalApiService(
+abstract class ExternalStrategyBase(
     private val httpClient: HttpClient
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -59,5 +59,4 @@ abstract class ExternalApiService(
 
         return response
     }
-
 }

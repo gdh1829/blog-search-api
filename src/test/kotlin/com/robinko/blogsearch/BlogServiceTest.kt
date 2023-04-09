@@ -1,6 +1,6 @@
 package com.robinko.blogsearch
 
-import com.robinko.blogsearch.kakao.KakaoBlogSearchResult
+import com.robinko.blogsearch.external.KakaoBlogSearchResult
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll

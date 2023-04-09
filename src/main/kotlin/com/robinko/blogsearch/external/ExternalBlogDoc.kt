@@ -1,4 +1,6 @@
-package com.robinko.blogsearch
+package com.robinko.blogsearch.external
+
+import com.robinko.blogsearch.BlogDoc
 
 /**
  * 외부 연동 데이터 인터페이스.
