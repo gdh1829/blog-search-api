@@ -1,5 +1,6 @@
 package com.robinko.blogsearch
 
+import com.robinko.blogsearch.external.BlogSource
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -33,7 +34,7 @@ class BlogSearchPriorityController(
         @PageableDefault(page = 0, size = 10, sort = ["priority"], direction = Sort.Direction.ASC)
         pageable: Pageable
     ): ResponseEntity<Page<BlogSearchPriority>> {
-        if (pageable.sort.any { !allowedSortFields.contains(it.property) }) {
+        if (pageable.sort.none { allowedSortFields.contains(it.property) }) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "${allowedSortFields.joinToString(",")} are only allowed to sort param"

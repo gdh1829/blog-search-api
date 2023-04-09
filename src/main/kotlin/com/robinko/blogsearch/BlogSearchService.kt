@@ -1,5 +1,8 @@
 package com.robinko.blogsearch
 
+import com.robinko.blogsearch.external.BlogSource
+import com.robinko.blogsearch.external.ExternalSearchResult
+import com.robinko.blogsearch.external.SearchBlogStrategy
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
@@ -14,20 +17,13 @@ class BlogSearchService(
 ) {
     private val log = LoggerFactory.getLogger(BlogSearchService::class.java)
 
-    private var searchSources: ConcurrentLinkedDeque<SearchBlogStrategy> = ConcurrentLinkedDeque()
+    private val searchSources: ConcurrentLinkedDeque<SearchBlogStrategy> = ConcurrentLinkedDeque()
 
     fun searchBlog(query: String, page: Int, size: Int, sort: String?): ExternalSearchResult? {
-        var searchResult: ExternalSearchResult? = null
-
-        searchSources.takeWhile { strategy ->
-            log.info("trying to search blog from ${strategy.getBlogSource()}")
-            strategy.searchBlog(query, page, size, sort)
-                ?.also { searchResult = it }
-                ?.let { false }
-                ?: true
+        return searchSources.firstNotNullOfOrNull {
+            log.info("trying to search blog from ${it.getBlogSource()}")
+            it.searchBlog(query, page, size, sort)
         }
-
-        return searchResult
     }
 
     /**
@@ -45,7 +41,7 @@ class BlogSearchService(
         // 뒤로부터 갱신되는 검색 우선 순위 데이터 삽입
         searchSources.addAll(sorted)
         // 앞에서부터 구 우선순위 데이터 개수만큼 제거
-        (0 until currentSize).forEach { searchSources.pop() }
+        repeat(currentSize) { searchSources.pop() }
 
         val updated = searchSources.map { it.getBlogSource() }
         log.info("search source priority updated => $updated")

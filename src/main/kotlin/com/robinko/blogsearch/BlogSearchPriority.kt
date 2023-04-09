@@ -1,5 +1,6 @@
 package com.robinko.blogsearch
 
+import com.robinko.blogsearch.external.BlogSource
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.springframework.data.annotation.CreatedDate
@@ -7,8 +8,9 @@ import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDateTime
 import javax.persistence.Column
-import javax.persistence.Convert
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -41,8 +43,8 @@ data class BlogSearchPriority(
     val updatedTime: LocalDateTime = LocalDateTime.now(),
 
     @ApiModelProperty(value = "블로그검색소스", example = "KAKAO")
-    @Convert(converter = BlogSourceStringConverter::class)
     @Column(unique = true)
+    @Enumerated(value = EnumType.STRING)
     val source: BlogSource,
 
     @ApiModelProperty(value = "사용여부", example = "true")

@@ -56,6 +56,7 @@ class SqsService(
 
             val event = om.readValueOrNull(message.body, SnsEvent::class.java) ?: return@mapNotNull message
 
+            // 예외 발생시 큐 메시지는 삭제하지 않고 sqs에게 반환되고 다시 재처리될 수 있도록 한다.
             kotlin.runCatching {
                 when (event.entityName) {
                     KeywordStatistics::class.java.simpleName -> consumeKeywordStatisticsMessage(event)
@@ -66,9 +67,6 @@ class SqsService(
         }.run { deleteSqsMessageBatchAsync(this, request) }
     }
 
-    /**
-     * 차량 정보 변경 발생 이벤트 메시지 소비.
-     */
     internal fun consumeKeywordStatisticsMessage(event: SnsEvent) {
         log.info("Received Message: $event")
 
@@ -81,25 +79,13 @@ class SqsService(
         }
     }
 
-
-
-    /**
-     * deletes messages from aws sqs and logs its result or error.
-     *
-     * @param messages received from sqs
-     * @param request request to receive messages from sqs
-     */
     fun deleteSqsMessageBatchAsync(messages: List<Message>, request: ReceiveMessageRequest) {
         val deleteRequests = messages.takeIf { it.isNotEmpty() }
             ?.map { DeleteMessageBatchRequestEntry(it.messageId, it.receiptHandle) }
             ?: return
 
         sqs.deleteMessageBatchAsync(queueUrl, deleteRequests)
-            .runCatching {
-                log.debug("Messages deleted : {} -> {}", request, this.get()?.sdkResponseMetadata)
-            }
-            .onFailure {
-                log.error("Failed to delete AWS SQS message.", it)
-            }
+            .runCatching { log.debug("Messages deleted : {} -> {}", request, this.get()?.sdkResponseMetadata) }
+            .onFailure { log.error("Failed to delete AWS SQS message.", it) }
     }
 }
